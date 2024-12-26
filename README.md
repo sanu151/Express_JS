@@ -115,4 +115,77 @@ app.listen(3000, () => {
 
 With Nodemon configured, whenever you modify `app.js` (or any other file in your project), the server will automatically restart, and you can immediately see the changes reflected in your browser.
 
-By using Nodemon with Express.js, you can streamline your development workflow and significantly improve your productivity.
+
+## **HTTP Methods and Postman**
+
+**HTTP Methods**
+
+HTTP methods, also known as verbs, are used to define the action that a client wants to perform on a server. They are an essential part of the HTTP protocol, which is the foundation of data communication on the World Wide Web. Here are some of the most common HTTP methods:
+
+1. **GET:**
+   - Retrieves data from a specified resource.
+   - Should not have any side effects on the server.
+   - Typically used for reading data.
+   - Example: Fetching a list of users from a server.
+
+2. **POST:**
+   - Submits data to be processed to a specified resource.
+   - Often used for creating new resources.
+   - Can have side effects on the server.
+   - Example: Creating a new user account.
+
+3. **PUT:**
+   - Replaces all current representations of the target resource with the request payload.
+   - Often used for updating existing resources.
+   - Can have side effects on the server.
+   - Example: Updating a user's profile.
+
+4. **PATCH:**
+   - Applies partial modifications to a resource.
+   - Used for updating specific parts of a resource.
+   - Can have side effects on the server.
+   - Example: Changing a user's password.
+
+5. **DELETE:**
+   - Removes the specified resource.
+   - Can have side effects on the server.
+   - Example: Deleting a user account.
+
+**Postman and HTTP Methods**
+
+Postman is a powerful tool for interacting with APIs. It provides a user-friendly interface for sending HTTP requests and inspecting responses. Here's how Postman can be used with different HTTP methods:
+
+1. **GET:**
+   - In Postman, select the "GET" method from the dropdown.
+   - Enter the URL of the resource you want to retrieve.
+   - Click the "Send" button.
+   - Postman will display the response from the server.
+
+2. **POST:**
+   - Select the "POST" method.
+   - Enter the URL of the resource you want to create.
+   - In the "Body" tab, specify the data you want to send to the server.
+   - Click the "Send" button.
+   - Postman will display the response from the server, which may include the newly created resource.
+
+3. **PUT:**
+   - Select the "PUT" method.
+   - Enter the URL of the resource you want to update.
+   - In the "Body" tab, specify the updated data.
+   - Click the "Send" button.
+   - Postman will display the response from the server, which may include the updated resource.
+
+4. **PATCH:**
+   - Select the "PATCH" method.
+   - Enter the URL of the resource you want to partially update.
+   - In the "Body" tab, specify the data you want to update.
+   - Click the "Send" button.
+   - Postman will display the response from the server, which may include the updated resource.
+
+5. **DELETE:**
+   - Select the "DELETE" method.
+   - Enter the URL of the resource you want to delete.
+   - Click the "Send" button.
+   - Postman will display the response from the server, which may indicate whether the deletion was successful.
+
+
