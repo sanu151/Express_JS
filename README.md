@@ -189,3 +189,76 @@ Postman is a powerful tool for interacting with APIs. It provides a user-friendl
    - Postman will display the response from the server, which may indicate whether the deletion was successful.
 
 
+## **Express.js Routers and Routes**
+
+In Express.js, routers provide a modular way to organize and manage the different routes within your application. 
+
+**What is a Router?**
+
+* An Express router is an instance of the `express.Router()` function.
+* It allows you to define a set of routes (URL patterns) and their corresponding handlers (functions that handle the requests for those routes).
+* Routers help to:
+    * **Improve code organization:** By grouping related routes together, you can make your application's code more modular, easier to maintain, and more scalable.
+    * **Increase reusability:** Routers can be mounted in multiple places within your application, making them reusable across different parts of your application.
+    * **Enhance testability:** By isolating routes within routers, you can write more focused and easier-to-test unit tests.
+
+**Creating a Router:**
+
+```javascript
+const express = require('express');
+const router = express.Router();
+
+// Define routes within the router
+router.get('/', (req, res) => {
+  res.send('Home page');
+});
+
+router.get('/about', (req, res) => {
+  res.send('About page');
+});
+
+// Export the router
+module.exports = router;
+```
+
+**Mounting a Router in your Application:**
+
+```javascript
+const express = require('express');
+const app = express();
+const userRouter = require('./routes/users'); // Import the user router
+
+app.use('/users', userRouter); // Mount the user router at the '/users' path
+
+app.listen(3000, () => {
+  console.log('Server listening on port 3000');
+});
+```
+
+In this example:
+
+- We import the `userRouter` module, which contains the routes for the user-related endpoints.
+- We use the `app.use()` method to mount the `userRouter` at the `/users` path. This means that any requests that start with `/users` will be handled by the routes defined within the `userRouter`.
+
+**Example with Multiple Routers:**
+
+```javascript
+const express = require('express');
+const app = express();
+const userRouter = require('./routes/users');
+const productRouter = require('./routes/products');
+
+app.use('/users', userRouter);
+app.use('/products', productRouter);
+
+// ...
+```
+
+This demonstrates how you can mount multiple routers at different paths within your application.
+
+**Key Concepts:**
+
+* **Route Parameters:** You can define parameters in your route paths using colons (e.g., `/users/:id`). These parameters can be accessed in the request object (e.g., `req.params.id`).
+* **Route Handlers:** Route handlers are functions that handle the requests for specific routes. They typically receive two arguments: `req` (request object) and `res` (response object).
+* **Middleware:** You can use middleware functions with routers to perform tasks before, during, or after a request is handled.
+
