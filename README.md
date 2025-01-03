@@ -262,3 +262,77 @@ This demonstrates how you can mount multiple routers at different paths within y
 * **Route Handlers:** Route handlers are functions that handle the requests for specific routes. They typically receive two arguments: `req` (request object) and `res` (response object).
 * **Middleware:** You can use middleware functions with routers to perform tasks before, during, or after a request is handled.
 
+### **HTTP Responses: Serving HTML Files and JSON Data in Express.js**
+
+In Express.js, you can send various types of responses to the client, including HTML files and JSON data. Here's how you can achieve this:
+
+**1. Serving HTML Files:**
+
+* **Using `res.sendFile()`:**
+
+   ```javascript
+   const express = require('express');
+   const path = require('path'); 
+   const app = express();
+
+   app.get('/', (req, res) => {
+     res.sendFile(path.join(__dirname, 'public', 'index.html')); 
+   });
+
+   app.listen(3000, () => {
+     console.log('Server listening on port 3000');
+   });
+   ```
+
+   - `path.join(__dirname, 'public', 'index.html')`: Constructs the absolute path to the `index.html` file located in the `public` directory within your project.
+   - `res.sendFile()`: Sends the specified HTML file to the client.
+
+* **Using a Templating Engine (e.g., EJS):**
+
+   ```javascript
+   const express = require('express');
+   const app = express();
+   app.set('view engine', 'ejs'); // Set EJS as the view engine
+
+   app.get('/', (req, res) => {
+     res.render('index', { 
+       title: 'My Website', 
+       message: 'Welcome!' 
+     }); 
+   });
+
+   app.listen(3000, () => {
+     console.log('Server listening on port 3000');
+   });
+   ```
+
+   - `app.set('view engine', 'ejs')`: Sets EJS as the default templating engine for the application.
+   - `res.render('index', { ... })`: Renders the `index.ejs` file and passes data to the template.
+
+**2. Sending JSON Data:**
+
+```javascript
+const express = require('express');
+const app = express();
+
+app.get('/users', (req, res) => {
+  const users = [
+    { id: 1, name: 'John Doe' },
+    { id: 2, name: 'Jane Doe' }
+  ];
+  res.json(users); 
+});
+
+app.listen(3000, () => {
+  console.log('Server listening on port 3000');
+});
+```
+
+- `res.json(users)`: Sends the `users` array as JSON data to the client.
+
+**Key Considerations:**
+
+* **Content-Type Header:** When sending JSON data, Express automatically sets the `Content-Type` header to `application/json`.
+* **Error Handling:** Implement proper error handling to gracefully handle situations where data cannot be retrieved or sent.
+* **Security:** Be mindful of security best practices when sending sensitive data.
+
