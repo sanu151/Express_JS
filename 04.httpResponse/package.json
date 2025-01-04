@@ -1,0 +1,17 @@
+{
+  "name": "04.httpresponse",
+  "version": "1.0.0",
+  "description": "\"Http Response | send HTML file, Json file, Cookies, Status Code\"",
+  "license": "ISC",
+  "author": "Supriyo Das",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon index.js"
+  },
+  "dependencies": {
+    "express": "^4.21.2",
+    "nodemon": "^3.1.9"
+  }
+}
