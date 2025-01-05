@@ -544,3 +544,97 @@ app.listen(3000, () => {
 
 **Using Postman with JSON allows you to easily test your API endpoints and verify that your server is correctly receiving and processing the incoming data.**
 
+### Send and receive form data
+
+**1. Project Setup**
+
+*   **Create a new project directory:** `mkdir my-form-app && cd my-form-app`
+*   **Initialize npm:** `npm init -y`
+
+**2. Install Dependencies**
+
+*   Install Express.js and body-parser:
+    ```bash
+    npm install express body-parser
+    ```
+
+**3. Create `server.js`**
+
+```javascript
+const express = require('express');
+const bodyParser = require('body-parser');
+const app = express();
+
+// Middleware to parse form data
+app.use(bodyParser.urlencoded({ extended: true })); 
+
+app.post('/submit', (req, res) => {
+  const name = req.body.name;
+  const email = req.body.email;
+
+  console.log(`Name: ${name}`);
+  console.log(`Email: ${email}`);
+
+  res.send('Form submitted successfully!'); 
+});
+
+app.listen(3000, () => {
+  console.log('Server listening on port 3000');
+});
+```
+
+**4. Create `index.html`**
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Form Submission</title>
+</head>
+<body>
+
+  <h1>Submit Form</h1>
+
+  <form action="/submit" method="POST">
+    <label for="name">Name:</label>
+    <input type="text" id="name" name="name" required><br><br>
+
+    <label for="email">Email:</label>
+    <input type="email" id="email" name="email" required><br><br>
+
+    <button type="submit">Submit</button>
+  </form>
+
+</body>
+</html>
+```
+
+**Explanation:**
+
+*   **`bodyParser.urlencoded({ extended: true })`:** This middleware parses incoming request bodies in a URL-encoded format (typical for form submissions). `extended: true` allows for more complex nested objects.
+*   **`req.body`:** This object contains the parsed data from the form submission. You can access the values of form fields using their corresponding names (e.g., `req.body.name`, `req.body.email`).
+*   **`index.html`:** 
+    *   The `action` attribute of the `<form>` tag specifies the URL (`/submit`) where the form data will be sent.
+    *   The `method="POST"` attribute indicates that the form data will be sent using the HTTP POST method.
+
+**To run the server:**
+
+1.  Save the code in the appropriate files.
+2.  Run `node server.js` in your terminal.
+
+**To test:**
+
+1.  Open `index.html` in a web browser.
+2.  Fill in the form fields.
+3.  Submit the form.
+
+You should see the form data (name and email) logged to the console and a success message displayed in the browser.
+
+This example demonstrates a basic form submission. You can expand upon it by:
+
+*   Adding more form fields.
+*   Validating form data on the server-side.
+*   Storing the form data in a database.
+*   Using a templating engine (like EJS, Pug) to render the HTML.
+*   Implementing client-side validation using JavaScript.
+
