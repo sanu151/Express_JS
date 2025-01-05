@@ -336,3 +336,140 @@ app.listen(3000, () => {
 * **Error Handling:** Implement proper error handling to gracefully handle situations where data cannot be retrieved or sent.
 * **Security:** Be mindful of security best practices when sending sensitive data.
 
+### **HTTP Request with Query, Route and Header Parameter**
+
+**1.Query Parameters**
+
+* **Definition:** Query parameters are key-value pairs appended to the end of a URL after a question mark (?). They are used to pass additional information to the server along with the request.
+* **Format:** 
+   - `?key1=value1&key2=value2&...`
+   - Multiple parameters are separated by the ampersand (&) symbol.
+
+**Example:**
+
+```
+https://api.example.com/users?name=John&age=30
+```
+
+In this example:
+- `/users` is the endpoint.
+- `name=John` and `age=30` are query parameters.
+- `name` and `age` are the keys.
+- `John` and `30` are the corresponding values.
+
+**Accessing Query Parameters in Node.js with Express.js:**
+
+```javascript
+const express = require('express');
+const app = express();
+
+app.get('/users', (req, res) => {
+  const name = req.query.name;
+  const age = req.query.age;
+
+  // Use the query parameters to filter or process data
+  // ...
+
+  res.send(`Name: ${name}, Age: ${age}`); 
+});
+
+app.listen(3000, () => {
+  console.log('Server listening on port 3000');
+});
+```
+
+In this code:
+
+- `req.query` is an object that contains all the query parameters from the request.
+- You can access individual parameters using their keys (e.g., `req.query.name`).
+
+**Using Query Parameters in Different HTTP Methods:**
+
+While query parameters are commonly used with GET requests, they can also be used with other HTTP methods like POST, PUT, and DELETE. However, it's generally recommended to use the request body for sending data in POST, PUT, and DELETE requests.
+
+**Key Points:**
+
+- Query parameters are visible in the URL, which can have security implications for sensitive data.
+- There are limitations on the length and complexity of query strings.
+- For large amounts of data or sensitive information, it's better to use the request body instead of query parameters.
+
+**HTTP Request with Route Parameters and Headers**
+
+**2. Route Parameters**
+
+* **Definition:** Route parameters are placeholders within a URL path that allow you to dynamically match parts of the URL. They are typically represented by a colon (`:`) followed by a parameter name.
+
+* **Example:**
+
+   ```
+   /users/:userId 
+   /products/:productId 
+   ```
+
+   In these examples, `userId` and `productId` are route parameters.
+
+* **Accessing Route Parameters in Express.js:**
+
+   ```javascript
+   const express = require('express');
+   const app = express();
+
+   app.get('/users/:userId', (req, res) => {
+     const userId = req.params.userId; 
+     console.log('User ID:', userId);
+
+     // Use the userId to fetch user data from a database
+     // ...
+
+     res.send(`User ID: ${userId}`); 
+   });
+
+   app.listen(3000, () => {
+     console.log('Server listening on port 3000');
+   });
+   ```
+
+   - `req.params`: An object containing all the route parameters extracted from the URL.
+
+**3. HTTP Headers**
+
+* **Definition:** HTTP headers are key-value pairs that convey additional information about the request or response.
+
+* **Examples:**
+
+   - `Authorization`: Contains authentication credentials (e.g., bearer tokens).
+   - `Content-Type`: Specifies the type of data being sent in the request body (e.g., `application/json`, `text/plain`).
+   - `User-Agent`: Indicates the browser or client making the request.
+
+* **Accessing Request Headers in Express.js:**
+
+   ```javascript
+   const express = require('express');
+   const app = express();
+
+   app.get('/users', (req, res) => {
+     const authorizationHeader = req.headers.authorization; 
+     console.log('Authorization Header:', authorizationHeader);
+
+     // Verify the authorization token 
+     // ...
+
+     res.send('Hello, User!'); 
+   });
+
+   app.listen(3000, () => {
+     console.log('Server listening on port 3000');
+   });
+   ```
+
+   - `req.headers`: An object containing all the headers sent with the request.
+
+**Combining Route Parameters and Headers:**
+
+You can use both route parameters and headers in your Express.js applications to handle complex requests.
+
+**Key Points:**
+
+* Route parameters are essential for building dynamic APIs that interact with specific resources.
+* Headers provide crucial information about the request, such as authentication credentials and data format.
+* By effectively using route parameters and headers, you can create robust and flexible web applications and APIs.
