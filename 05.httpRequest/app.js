@@ -1,6 +1,8 @@
 const express = require("express");
 const app = express();
 
+const bodyParser = require("body-parser");
+
 // query parameter
 app.get("/", (req, res) => {
   const { id, name } = req.query;
@@ -12,6 +14,19 @@ app.get("/", (req, res) => {
 app.get("/route_param/name/:name/age/:age", (req, res) => {
   const { name, age } = req.params;
   res.send(`<h1>My name is ${name}, I am ${age} years old.</h1>`);
+  res.end();
+});
+
+// JSON data using body-perser
+// parse application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: false }));
+// parse application/json
+app.use(bodyParser.json());
+
+app.post("/json_data", (req, res) => {
+  const name = req.body.name;
+  const email = req.body.email;
+  res.send(`Name : ${name}, Email : ${email}`);
   res.end();
 });
 
