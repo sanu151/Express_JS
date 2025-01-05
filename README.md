@@ -463,6 +463,9 @@ While query parameters are commonly used with GET requests, they can also be use
    ```
 
    - `req.headers`: An object containing all the headers sent with the request.
+ 
+  ![image](https://github.com/user-attachments/assets/47a33852-cef7-4090-8faf-85f483a00449)
+
 
 **Combining Route Parameters and Headers:**
 
