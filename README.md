@@ -638,3 +638,59 @@ This example demonstrates a basic form submission. You can expand upon it by:
 *   Using a templating engine (like EJS, Pug) to render the HTML.
 *   Implementing client-side validation using JavaScript.
 
+### **In Express.js, you can use regular expressions to define more flexible and specific routes.**
+
+**1. Basic Syntax:**
+
+- Enclose the regular expression within forward slashes (/) inside the `app.METHOD()` call.
+
+```javascript
+const express = require('express');
+const app = express();
+
+app.get(/^\/api\/users\/([a-zA-Z0-9]+)$/, (req, res) => {
+  // ... handle the request ...
+});
+```
+
+- In this example:
+    - `^\/api\/users\/`: Matches the beginning of the URL with `/api/users/`.
+    - `([a-zA-Z0-9]+)`: Matches one or more alphanumeric characters (captures the username).
+    - `$`: Matches the end of the URL.
+
+**2. Accessing Captured Groups:**
+
+- Captured groups within the regular expression can be accessed in the `req.params` object.
+
+```javascript
+app.get(/^\/api\/users\/([a-zA-Z0-9]+)$/, (req, res) => {
+  const username = req.params[0]; // Access the first captured group
+  // ... handle the request ...
+});
+```
+
+**3. Example with Multiple Captured Groups:**
+
+```javascript
+app.get(/^\/products\/([a-zA-Z0-9]+)\/([0-9]+)$/, (req, res) => {
+  const productCategory = req.params[0];
+  const productId = req.params[1];
+  // ... handle the request ...
+});
+```
+
+**Key Considerations:**
+
+- **Complexity:** Overly complex regular expressions can make your routes harder to read and maintain.
+- **Alternative:** For simpler patterns, consider using route parameters with optional constraints instead of full regular expressions.
+
+**Example with Route Parameter and Constraint:**
+
+```javascript
+app.get('/users/:userId(\\d+)', (req, res) => {
+  // ... handle the request ...
+});
+```
+
+This route matches `/users/123`, `/users/456`, etc., where `userId` must be a sequence of digits.
+
