@@ -746,7 +746,7 @@ app.listen(port, () => {
 **Key Points:**
 
 *   Environment variables are crucial for managing configuration settings, such as database credentials, API keys, and sensitive information.
-*   The `.env` file should **never** be committed to version control.
+*   **The `.env` file should **never** be committed to version control.**
 *   This approach helps keep your code more flexible and adaptable to different environments (development, testing, production).
 
 **Example:**
