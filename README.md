@@ -640,115 +640,8 @@ This example demonstrates a basic form submission. You can expand upon it by:
 
 ### **In Express.js, you can use regular expressions to define more flexible and specific routes.**
 
-I'll provide a table summarizing common regular expression syntax and then illustrate with a practical example using Express.js routing.
-```python?code_reference&code_event_index=3
-import pandas as pd
+#### Table summarizing common regular expression syntax:
 
-# Create the DataFrame with the provided data
-data = {
-    "Pattern": [
-        ".",
-        "*",
-        "+",
-        "?",
-        "^",
-        "$",
-        "[abc]",
-        "[a-z]",
-        "[^abc]",
-        "(a|b)",
-        "\\d",
-        "\\D",
-        "\\w",
-        "\\W",
-        "{n}",
-        "{n,}",
-        "{n,m}",
-    ],
-    "Description": [
-        "Matches any character (except newline)",
-        "Matches zero or more occurrences of the preceding character",
-        "Matches one or more occurrences of the preceding character",
-        "Matches zero or one occurrence of the preceding character",
-        "Matches the beginning of a string",
-        "Matches the end of a string",
-        "Matches any one character within the brackets",
-        "Matches any one character within the range",
-        "Matches any one character not within the brackets",
-        'Matches either "a" or "b"',
-        "Matches any digit (0-9)",
-        "Matches any non-digit",
-        "Matches any word character (a-z, A-Z, 0-9, _)",
-        "Matches any non-word character",
-        'Matches exactly "n" occurrences of the preceding character',
-        'Matches "n" or more occurrences of the preceding character',
-        'Matches between "n" and "m" occurrences of the preceding character',
-    ],
-    "Example": [
-        ".at",
-        "a*",
-        "a+",
-        "colou?r",
-        "^The",
-        "end$",
-        "[aeiou]",
-        "[a-zA-Z]",
-        "[^aeiou]",
-        "(cat|dog)",
-        "\\d\\d",
-        "\\D\\D",
-        "\\w\\w",
-        "\\W\\W",
-        "a{3}",
-        "a{2,}",
-        "a{2,4}",
-    ],
-    "Matches": [
-        "cat, hat, mat",
-        "a, aa, aaa, (empty string)",
-        "a, aa, aaa",
-        "color, colour",
-        "The quick brown fox",
-        "This is the end",
-        "a, e, i, o, u",
-        "a, b, z, A, B, Z",
-        "b, c, z",
-        "cat, dog",
-        "12, 34, 00",
-        "ab, ?#,  !",
-        "ab, A1, _z",
-        "?#,  !, -=",
-        "aaa",
-        "aa, aaa, aaaa",
-        "aa, aaa, aaaa",
-    ],
-    "Doesn't Match": [
-        "at, scatter",
-        "b, ab",
-        "(empty string), b, ab",
-        "colouur, colors",
-        "A quick brown fox, In the beginning",
-        "This is the end of the world, No end in sight",
-        "b, c, z",
-        "1, 2, ?",
-        "a, e, i, o, u",
-        "bird, cats",
-        "a1, 1a, abc",
-        "12, a1, 1a",
-        "?#,  !, -=",
-        "ab, A1, _z",
-        "aa, aaaa, a",
-        "a, (empty string)",
-        "a, aaaaa",
-    ],
-}
-
-df = pd.DataFrame(data)
-
-# Convert the DataFrame to a markdown table
-print(df.to_markdown(index=False, numalign="left", stralign="left"))
-```
-```text?code_stdout&code_event_index=3
 | Pattern   | Description                                                        | Example   | Matches                    | Doesn't Match                                 |
 |:----------|:-------------------------------------------------------------------|:----------|:---------------------------|:----------------------------------------------|
 | .         | Matches any character (except newline)                             | .at       | cat, hat, mat              | at, scatter                                   |
@@ -769,28 +662,6 @@ print(df.to_markdown(index=False, numalign="left", stralign="left"))
 | {n,}      | Matches "n" or more occurrences of the preceding character         | a{2,}     | aa, aaa, aaaa              | a, (empty string)                             |
 | {n,m}     | Matches between "n" and "m" occurrences of the preceding character | a{2,4}    | aa, aaa, aaaa              | a, aaaaa                                      |
 
-```
-Here's the table summarizing common regular expression syntax:
-
-| Pattern | Description | Example | Matches | Doesn't Match |
-|---|---|---|---|---|
-| `.` | Matches any character (except newline) | `.at` | `cat`, `hat`, `mat` | `at`, `scatter` |
-| `*` | Matches zero or more occurrences of the preceding character | `a*` | `a`, `aa`, `aaa`, `(empty string)` | `b`, `ab` |
-| `+` | Matches one or more occurrences of the preceding character | `a+` | `a`, `aa`, `aaa` | `(empty string)`, `b`, `ab` |
-| `?` | Matches zero or one occurrence of the preceding character | `colou?r` | `color`, `colour` | `colouur`, `colors` |
-| `^` | Matches the beginning of a string | `^The` | `The quick brown fox` | `A quick brown fox`, `In the beginning` |
-| `$` | Matches the end of a string | `end$` | `This is the end` | `This is the end of the world`, `No end in sight` |
-| `[abc]` | Matches any one character within the brackets | `[aeiou]` | `a`, `e`, `i`, `o`, `u` | `b`, `c`, `z` |
-| `[a-z]` | Matches any one character within the range | `[a-zA-Z]` | `a`, `b`, `z`, `A`, `B`, `Z` | `1`, `2`, `?` |
-| `[^abc]` | Matches any one character not within the brackets | `[^aeiou]` | `b`, `c`, `z` | `a`, `e`, `i`, `o`, `u` |
-| `(a|b)` | Matches either "a" or "b" | `(cat|dog)` | `cat`, `dog` | `bird`, `cats` |
-| `\d` | Matches any digit (0-9) | `\d\d` | `12`, `34`, `00` | `a1`, `1a`, `abc` |
-| `\D` | Matches any non-digit | `\D\D` | `ab`, `?#`, ` !` | `12`, `a1`, `1a` |
-| `\w` | Matches any word character (a-z, A-Z, 0-9, \_) | `\w\w` | `ab`, `A1`, `_z` | `?#`, ` !`, `-="` |
-| `\W` | Matches any non-word character | `\W\W` | `?#`, ` !`, `-="` | `ab`, `A1`, `_z` |
-| `{n}` | Matches exactly "n" occurrences of the preceding character | `a{3}` | `aaa` | `aa`, `aaaa`, `a` |
-| `{n,}` | Matches "n" or more occurrences of the preceding character | `a{2,}` | `aa`, `aaa`, `aaaa` | `a`, `(empty string)` |
-| `{n,m}` | Matches between "n" and "m" occurrences of the preceding character | `a{2,4}` | `aa`, `aaa`, `aaaa` | `a`, `aaaaa` |
 
 ## Example: Express.js Routing with Regular Expressions
 
