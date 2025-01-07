@@ -691,3 +691,89 @@ In this example:
 - The first route matches URLs like `/products/12345` but not `/products/1234` or `/products/123456`.
 - The second route matches URLs like `/users/john123` or `/users/Alice` but not `/users/123john` or `/users/john-doe`.
 
+## Set up environment variables
+
+**1. Create a `.env` file:**
+
+*   Create a file named `.env` in the root directory of your Express.js project.
+*   Store your environment variables in this file using the following format:
+
+```
+VARIABLE_NAME=value
+```
+
+    *   Example:
+        ```
+        PORT=3000
+        DATABASE_URL=your_database_url
+        SECRET_KEY=your_secret_key
+        ```
+
+**2. Install the `dotenv` package:**
+
+```bash
+npm install dotenv
+```
+
+**3. Load environment variables in your `app.js` file:**
+
+```javascript
+require('dotenv').config();
+
+const express = require('express');
+const app = express();
+
+const port = process.env.PORT || 3000; 
+const databaseUrl = process.env.DATABASE_URL;
+const secretKey = process.env.SECRET_KEY;
+
+// ... rest of your Express.js code ...
+
+app.listen(port, () => {
+  console.log(`Server listening on port ${port}`);
+});
+```
+
+**Explanation:**
+
+*   `require('dotenv').config();`: This line loads the environment variables from the `.env` file into the `process.env` object.
+*   Access environment variables using `process.env.VARIABLE_NAME`.
+
+**4. Ignore the `.env` file in version control:**
+
+*   Add `.env` to your `.gitignore` file to prevent it from being committed to your version control system (like Git). This helps to keep your sensitive information secure.
+
+**Key Points:**
+
+*   Environment variables are crucial for managing configuration settings, such as database credentials, API keys, and sensitive information.
+*   The `.env` file should **never** be committed to version control.
+*   This approach helps keep your code more flexible and adaptable to different environments (development, testing, production).
+
+**Example:**
+
+```
+.env
+---
+PORT=3001 
+DATABASE_URL=mongodb://localhost:27017/my_database
+SECRET_KEY=your_very_secret_key
+
+app.js
+---
+require('dotenv').config();
+
+const express = require('express');
+const app = express();
+
+const port = process.env.PORT; 
+const databaseUrl = process.env.DATABASE_URL; 
+
+// ... rest of your Express.js code ...
+
+app.listen(port, () => {
+  console.log(`Server listening on port ${port}`);
+});
+```
+
+In this example, the server will listen on port 3001 because the `PORT` environment variable is set to 3001 in the `.env` file.
+
