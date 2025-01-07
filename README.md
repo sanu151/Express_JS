@@ -640,57 +640,183 @@ This example demonstrates a basic form submission. You can expand upon it by:
 
 ### **In Express.js, you can use regular expressions to define more flexible and specific routes.**
 
-**1. Basic Syntax:**
+I'll provide a table summarizing common regular expression syntax and then illustrate with a practical example using Express.js routing.
+```python?code_reference&code_event_index=3
+import pandas as pd
 
-- Enclose the regular expression within forward slashes (/) inside the `app.METHOD()` call.
+# Create the DataFrame with the provided data
+data = {
+    "Pattern": [
+        ".",
+        "*",
+        "+",
+        "?",
+        "^",
+        "$",
+        "[abc]",
+        "[a-z]",
+        "[^abc]",
+        "(a|b)",
+        "\\d",
+        "\\D",
+        "\\w",
+        "\\W",
+        "{n}",
+        "{n,}",
+        "{n,m}",
+    ],
+    "Description": [
+        "Matches any character (except newline)",
+        "Matches zero or more occurrences of the preceding character",
+        "Matches one or more occurrences of the preceding character",
+        "Matches zero or one occurrence of the preceding character",
+        "Matches the beginning of a string",
+        "Matches the end of a string",
+        "Matches any one character within the brackets",
+        "Matches any one character within the range",
+        "Matches any one character not within the brackets",
+        'Matches either "a" or "b"',
+        "Matches any digit (0-9)",
+        "Matches any non-digit",
+        "Matches any word character (a-z, A-Z, 0-9, _)",
+        "Matches any non-word character",
+        'Matches exactly "n" occurrences of the preceding character',
+        'Matches "n" or more occurrences of the preceding character',
+        'Matches between "n" and "m" occurrences of the preceding character',
+    ],
+    "Example": [
+        ".at",
+        "a*",
+        "a+",
+        "colou?r",
+        "^The",
+        "end$",
+        "[aeiou]",
+        "[a-zA-Z]",
+        "[^aeiou]",
+        "(cat|dog)",
+        "\\d\\d",
+        "\\D\\D",
+        "\\w\\w",
+        "\\W\\W",
+        "a{3}",
+        "a{2,}",
+        "a{2,4}",
+    ],
+    "Matches": [
+        "cat, hat, mat",
+        "a, aa, aaa, (empty string)",
+        "a, aa, aaa",
+        "color, colour",
+        "The quick brown fox",
+        "This is the end",
+        "a, e, i, o, u",
+        "a, b, z, A, B, Z",
+        "b, c, z",
+        "cat, dog",
+        "12, 34, 00",
+        "ab, ?#,  !",
+        "ab, A1, _z",
+        "?#,  !, -=",
+        "aaa",
+        "aa, aaa, aaaa",
+        "aa, aaa, aaaa",
+    ],
+    "Doesn't Match": [
+        "at, scatter",
+        "b, ab",
+        "(empty string), b, ab",
+        "colouur, colors",
+        "A quick brown fox, In the beginning",
+        "This is the end of the world, No end in sight",
+        "b, c, z",
+        "1, 2, ?",
+        "a, e, i, o, u",
+        "bird, cats",
+        "a1, 1a, abc",
+        "12, a1, 1a",
+        "?#,  !, -=",
+        "ab, A1, _z",
+        "aa, aaaa, a",
+        "a, (empty string)",
+        "a, aaaaa",
+    ],
+}
+
+df = pd.DataFrame(data)
+
+# Convert the DataFrame to a markdown table
+print(df.to_markdown(index=False, numalign="left", stralign="left"))
+```
+```text?code_stdout&code_event_index=3
+| Pattern   | Description                                                        | Example   | Matches                    | Doesn't Match                                 |
+|:----------|:-------------------------------------------------------------------|:----------|:---------------------------|:----------------------------------------------|
+| .         | Matches any character (except newline)                             | .at       | cat, hat, mat              | at, scatter                                   |
+| *         | Matches zero or more occurrences of the preceding character        | a*        | a, aa, aaa, (empty string) | b, ab                                         |
+| +         | Matches one or more occurrences of the preceding character         | a+        | a, aa, aaa                 | (empty string), b, ab                         |
+| ?         | Matches zero or one occurrence of the preceding character          | colou?r   | color, colour              | colouur, colors                               |
+| ^         | Matches the beginning of a string                                  | ^The      | The quick brown fox        | A quick brown fox, In the beginning           |
+| $         | Matches the end of a string                                        | end$      | This is the end            | This is the end of the world, No end in sight |
+| [abc]     | Matches any one character within the brackets                      | [aeiou]   | a, e, i, o, u              | b, c, z                                       |
+| [a-z]     | Matches any one character within the range                         | [a-zA-Z]  | a, b, z, A, B, Z           | 1, 2, ?                                       |
+| [^abc]    | Matches any one character not within the brackets                  | [^aeiou]  | b, c, z                    | a, e, i, o, u                                 |
+| (a|b)     | Matches either "a" or "b"                                          | (cat|dog) | cat, dog                   | bird, cats                                    |
+| \d        | Matches any digit (0-9)                                            | \d\d      | 12, 34, 00                 | a1, 1a, abc                                   |
+| \D        | Matches any non-digit                                              | \D\D      | ab, ?#,  !                 | 12, a1, 1a                                    |
+| \w        | Matches any word character (a-z, A-Z, 0-9, _)                      | \w\w      | ab, A1, _z                 | ?#,  !, -=                                    |
+| \W        | Matches any non-word character                                     | \W\W      | ?#,  !, -=                 | ab, A1, _z                                    |
+| {n}       | Matches exactly "n" occurrences of the preceding character         | a{3}      | aaa                        | aa, aaaa, a                                   |
+| {n,}      | Matches "n" or more occurrences of the preceding character         | a{2,}     | aa, aaa, aaaa              | a, (empty string)                             |
+| {n,m}     | Matches between "n" and "m" occurrences of the preceding character | a{2,4}    | aa, aaa, aaaa              | a, aaaaa                                      |
+
+```
+Here's the table summarizing common regular expression syntax:
+
+| Pattern | Description | Example | Matches | Doesn't Match |
+|---|---|---|---|---|
+| `.` | Matches any character (except newline) | `.at` | `cat`, `hat`, `mat` | `at`, `scatter` |
+| `*` | Matches zero or more occurrences of the preceding character | `a*` | `a`, `aa`, `aaa`, `(empty string)` | `b`, `ab` |
+| `+` | Matches one or more occurrences of the preceding character | `a+` | `a`, `aa`, `aaa` | `(empty string)`, `b`, `ab` |
+| `?` | Matches zero or one occurrence of the preceding character | `colou?r` | `color`, `colour` | `colouur`, `colors` |
+| `^` | Matches the beginning of a string | `^The` | `The quick brown fox` | `A quick brown fox`, `In the beginning` |
+| `$` | Matches the end of a string | `end$` | `This is the end` | `This is the end of the world`, `No end in sight` |
+| `[abc]` | Matches any one character within the brackets | `[aeiou]` | `a`, `e`, `i`, `o`, `u` | `b`, `c`, `z` |
+| `[a-z]` | Matches any one character within the range | `[a-zA-Z]` | `a`, `b`, `z`, `A`, `B`, `Z` | `1`, `2`, `?` |
+| `[^abc]` | Matches any one character not within the brackets | `[^aeiou]` | `b`, `c`, `z` | `a`, `e`, `i`, `o`, `u` |
+| `(a|b)` | Matches either "a" or "b" | `(cat|dog)` | `cat`, `dog` | `bird`, `cats` |
+| `\d` | Matches any digit (0-9) | `\d\d` | `12`, `34`, `00` | `a1`, `1a`, `abc` |
+| `\D` | Matches any non-digit | `\D\D` | `ab`, `?#`, ` !` | `12`, `a1`, `1a` |
+| `\w` | Matches any word character (a-z, A-Z, 0-9, \_) | `\w\w` | `ab`, `A1`, `_z` | `?#`, ` !`, `-="` |
+| `\W` | Matches any non-word character | `\W\W` | `?#`, ` !`, `-="` | `ab`, `A1`, `_z` |
+| `{n}` | Matches exactly "n" occurrences of the preceding character | `a{3}` | `aaa` | `aa`, `aaaa`, `a` |
+| `{n,}` | Matches "n" or more occurrences of the preceding character | `a{2,}` | `aa`, `aaa`, `aaaa` | `a`, `(empty string)` |
+| `{n,m}` | Matches between "n" and "m" occurrences of the preceding character | `a{2,4}` | `aa`, `aaa`, `aaaa` | `a`, `aaaaa` |
+
+## Example: Express.js Routing with Regular Expressions
 
 ```javascript
 const express = require('express');
 const app = express();
 
-app.get(/^\/api\/users\/([a-zA-Z0-9]+)$/, (req, res) => {
-  // ... handle the request ...
+// Route for matching product IDs that are exactly 5 digits long
+app.get('/products/:productId([0-9]{5})', (req, res) => {
+  const productId = req.params.productId;
+  res.send(`Product ID: ${productId}`);
+});
+
+// Route for matching usernames that start with a letter and contain only letters and numbers
+app.get('/users/:username([a-zA-Z][a-zA-Z0-9]+)', (req, res) => {
+  const username = req.params.username;
+  res.send(`Username: ${username}`);
+});
+
+app.listen(3000, () => {
+  console.log('Server listening on port 3000');
 });
 ```
 
-- In this example:
-    - `^\/api\/users\/`: Matches the beginning of the URL with `/api/users/`.
-    - `([a-zA-Z0-9]+)`: Matches one or more alphanumeric characters (captures the username).
-    - `$`: Matches the end of the URL.
+In this example:
 
-**2. Accessing Captured Groups:**
-
-- Captured groups within the regular expression can be accessed in the `req.params` object.
-
-```javascript
-app.get(/^\/api\/users\/([a-zA-Z0-9]+)$/, (req, res) => {
-  const username = req.params[0]; // Access the first captured group
-  // ... handle the request ...
-});
-```
-
-**3. Example with Multiple Captured Groups:**
-
-```javascript
-app.get(/^\/products\/([a-zA-Z0-9]+)\/([0-9]+)$/, (req, res) => {
-  const productCategory = req.params[0];
-  const productId = req.params[1];
-  // ... handle the request ...
-});
-```
-
-**Key Considerations:**
-
-- **Complexity:** Overly complex regular expressions can make your routes harder to read and maintain.
-- **Alternative:** For simpler patterns, consider using route parameters with optional constraints instead of full regular expressions.
-
-**Example with Route Parameter and Constraint:**
-
-```javascript
-app.get('/users/:userId(\\d+)', (req, res) => {
-  // ... handle the request ...
-});
-```
-
-This route matches `/users/123`, `/users/456`, etc., where `userId` must be a sequence of digits.
+- The first route matches URLs like `/products/12345` but not `/products/1234` or `/products/123456`.
+- The second route matches URLs like `/users/john123` or `/users/Alice` but not `/users/123john` or `/users/john-doe`.
 
