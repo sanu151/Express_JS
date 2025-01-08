@@ -11,6 +11,7 @@
 |:---------------|:---------------------------------------------------------------------|:-----------------------------------------------------------------------------------------|:---------------------------|
 | express        | Core framework for building web applications in Node.js              | [expressjs.com](https://expressjs.com/)                                                  | `npm install express`      |
 | body-parser    | Parses incoming request bodies (JSON, URL-encoded)                   | [npm body-preser](https://www.npmjs.com/package/body-parser)                             | `npm install body-parser`  |
+| cookie-parser  | parsing cookies, populating req.cookies, and signed cookie support. | [https://www.npmjs.com/package/cookie-parser](https://www.npmjs.com/package/cookie-parser) | `npm install cookie-parser`|
 | cors           | Enables Cross-Origin Resource Sharing (CORS)                         |                                                                                          | `npm install cors`         |
 | helmet         | Helps secure Express.js apps by setting various HTTP headers         |                                                                                          | `npm install helmet`       |
 | morgan         | HTTP request logger middleware                                       |                                                                                          | `npm install morgan`       |
