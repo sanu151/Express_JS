@@ -4,6 +4,25 @@
 # **Express.js**
 ### **A Versatile Node.js Framework**
 
+**Documentation : (https://expressjs.com/)[https://expressjs.com/]**
+
+
+| Package Name   | Description                                                          | Documentation                                                                            | Installation               |
+|:---------------|:---------------------------------------------------------------------|:-----------------------------------------------------------------------------------------|:---------------------------|
+| express        | Core framework for building web applications in Node.js              | [expressjs.com](https://expressjs.com/)                                                  | `npm install express`      |
+| body-parser    | Parses incoming request bodies (JSON, URL-encoded)                   | [npm body-preser](https://www.npmjs.com/package/body-parser)                             | `npm install body-parser`  |
+| cors           | Enables Cross-Origin Resource Sharing (CORS)                         |                                                                                          | `npm install cors`         |
+| helmet         | Helps secure Express.js apps by setting various HTTP headers         |                                                                                          | `npm install helmet`       |
+| morgan         | HTTP request logger middleware                                       |                                                                                          | `npm install morgan`       |
+| jsonwebtoken   | Implements JSON Web Tokens (JWT) for authentication                  |                                                                                          | `npm install jsonwebtoken` |
+| mongoose       | Object Data Modeling (ODM) library for MongoDB                       | [mongoosejs.com](https://www.google.com/url?sa=E&source=gmail&q=https://mongoosejs.com/) | `npm install mongoose`     |
+| sequelize      | Object-Relational Mapper (ORM) for working with relational databases | [sequelize.org](https://www.google.com/url?sa=E&source=gmail&q=https://sequelize.org/)   | `npm install sequelize`    |
+| multer         | Handles multipart/form-data, primarily for uploading files           |                                                                                          | `npm install multer`       |
+| nodemailer     | Send emails from your Node.js application                            | [nodemailer.com](https://www.google.com/url?sa=E&source=gmail&q=https://nodemailer.com/) | `npm install nodemailer`   |
+| dotenv         | Loads environment variables from a .env file                         | [Link to dotenv documentation](https://www.npmjs.com/package/dotenv)                     | npm install dotenv         |
+
+
+
 **What is Express.js?**
 
 Express.js, often referred to as simply Express, is a minimalist and flexible web application framework built on top of Node.js. It provides a robust set of features for building web applications and APIs. Express offers a streamlined approach to handling HTTP requests and responses, making it a popular choice for developers seeking efficiency and scalability.
