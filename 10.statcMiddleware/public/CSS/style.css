@@ -1,0 +1,43 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  margin: 0 50px;
+  padding: 10px 30px;
+  justify-content: center;
+  align-items: center;
+}
+
+div {
+  padding: 1rem;
+  margin: 1rem;
+}
+
+.heading-text {
+  color: brown;
+  text-align: center;
+  padding: 1rem;
+}
+
+h3,
+h4,
+h5 {
+  padding-bottom: 0.5rem;
+}
+
+.img-div {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+}
+
+img {
+  height: 350px;
+  width: auto;
+}
