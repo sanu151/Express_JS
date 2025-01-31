@@ -1022,3 +1022,168 @@ This example demonstrates a simple Express.js route that sends a JSON response t
 
 Remember to replace `http://localhost:3001/your-api-endpoint` with the actual URL of your API endpoint in the `fetch` request.
 
+
+## Rest API CRUD Operation using MongoDB Atlas
+
+```javascript
+const express = require('express');
+const mongoose = require('mongoose');
+const cors = require('cors');
+const app = express();
+const port = process.env.PORT || 5000;
+
+// Middleware
+app.use(cors());
+app.use(express.json()); 
+
+// Connect to MongoDB Atlas
+mongoose.connect('mongodb+srv://<your_username>:<your_password>@<your_cluster_name>.mongodb.net/<your_database_name>?retryWrites=true&w=majority', 
+  { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => console.log('MongoDB Connected'))
+  .catch(err => console.error(err));
+
+// Define Product Schema
+const productSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: true,
+  },
+  price: {
+    type: Number,
+    required: true,
+  },
+  description: {
+    type: String,
+    required: true,
+  },
+});
+
+const Product = mongoose.model('Product', productSchema);
+
+// Routes
+app.get('/products', async (req, res) => {
+  try {
+    const products = await Product.find();
+    res.json(products);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+app.get('/products/:id', async (req, res) => {
+  try {
+    const product = await Product.findById(req.params.id);
+    if (!product) {
+      return res.status(404).json({ message: 'Product Not Found' });
+    }
+    res.json(product);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+app.post('/products', async (req, res) => {
+  try {
+    const newProduct = new Product(req.body);
+    const savedProduct = await newProduct.save();
+    res.status(201).json(savedProduct);
+  } catch (err) {
+    res.status(400).json({ message: err.message }); 
+  }
+});
+
+app.put('/products/:id', async (req, res) => {
+  try {
+    const updatedProduct = await Product.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    if (!updatedProduct) {
+      return res.status(404).json({ message: 'Product Not Found' });
+    }
+    res.json(updatedProduct);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+app.delete('/products/:id', async (req, res) => {
+  try {
+    const deletedProduct = await Product.findByIdAndDelete(req.params.id);
+    if (!deletedProduct) {
+      return res.status(404).json({ message: 'Product Not Found' });
+    }
+    res.status(204).send(); 
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+app.listen(port, () => {
+  console.log(`Server listening on port ${port}`);
+});
+```
+
+**Explanation:**
+
+1. **Import necessary modules:**
+   - `express`: For creating the Express.js server.
+   - `mongoose`: For interacting with MongoDB.
+   - `cors`: For enabling Cross-Origin Resource Sharing (CORS).
+
+2. **Connect to MongoDB Atlas:**
+   - Replace placeholders in the connection string with your actual MongoDB Atlas credentials:
+     - `<your_username>`: Your MongoDB Atlas username.
+     - `<your_password>`: Your MongoDB Atlas password.
+     - `<your_cluster_name>`: Your MongoDB Atlas cluster name.
+     - `<your_database_name>`: The name of the database you want to use.
+   - Use `useNewUrlParser: true` and `useUnifiedTopology: true` for better connection stability.
+
+3. **Define Product Schema:**
+   - Create a Mongoose schema (`productSchema`) to define the structure of the `Product` documents.
+
+4. **Create Product Model:**
+   - Create a Mongoose model (`Product`) based on the schema.
+
+5. **Define Routes:**
+   - **`GET /products`:** Retrieves all products from the database.
+   - **`GET /products/:id`:** Retrieves a single product by its ID.
+   - **`POST /products`:** Creates a new product in the database.
+   - **`PUT /products/:id`:** Updates an existing product in the database.
+   - **`DELETE /products/:id`:** Deletes a product from the database.
+
+6. **Error Handling:**
+   - Use `try...catch` blocks to handle potential errors (e.g., database connection issues, invalid data) and send appropriate HTTP status codes (e.g., 500 for server errors, 400 for bad requests, 404 for not found).
+
+**To run this code:**
+
+1. **Install dependencies:**
+   ```bash
+   npm install express mongoose cors
+   ```
+
+2. **Create a `.env` file** (optional, but recommended) to store your MongoDB Atlas connection string securely:
+
+   ```
+   MONGODB_URI=mongodb+srv://<your_username>:<your_password>@<your_cluster_name>.mongodb.net/<your_database_name>?retryWrites=true&w=majority
+   ```
+
+3. **Access environment variables:**
+   ```javascript
+   require('dotenv').config();
+   const mongoURI = process.env.MONGODB_URI; 
+   mongoose.connect(mongoURI, { 
+     useNewUrlParser: true, 
+     useUnifiedTopology: true 
+   }) 
+   ```
+
+4. **Start the server:**
+   ```bash
+   node your_app_file.js 
+   ```
+
+This example provides a basic foundation for building a RESTful API with CRUD operations using MongoDB Atlas and Express.js. You can further enhance it by adding features like:
+
+- **Data validation:** Use Mongoose's built-in validation features.
+- **Pagination and filtering:** Implement pagination and filtering options for efficient data retrieval.
+- **Authentication and authorization:** Secure your API with authentication and authorization mechanisms.
+- **Input sanitization:** Protect your application from potential security vulnerabilities by sanitizing user input.
+- **Testing:** Write unit and integration tests to ensure the API's reliability and correctness.
