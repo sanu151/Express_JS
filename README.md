@@ -1381,3 +1381,91 @@ When deploying your application to a hosting service (e.g., Heroku, Vercel, AWS)
 4. Define schemas and models to interact with your data.
 5. Run and test your application.
 
+
+## **Express.js Image Upload with Multer**
+
+**1. Project Setup**
+
+*   Create a new project directory: `mkdir my-image-upload && cd my-image-upload`
+*   Initialize npm: `npm init -y`
+*   Install necessary packages:
+    ```bash
+    npm install express multer
+    ```
+
+**2. Create `server.js`**
+
+```javascript
+const express = require('express');
+const multer = require('multer');
+const path = require('path'); 
+const app = express();
+
+// Configure Multer storage
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'uploads/'); // Specify the directory to save uploaded files
+  },
+  filename: (req, file, cb) => {
+    cb(null, `${Date.now()}-${file.originalname}`); // Generate unique filenames
+  }
+});
+
+const upload = multer({ storage: storage });
+
+app.post('/upload', upload.single('image'), (req, res) => { 
+  if (!req.file) {
+    return res.status(400).send('No file uploaded.');
+  }
+
+  res.send('File uploaded successfully!');
+});
+
+app.listen(3000, () => {
+  console.log('Server listening on port 3000');
+});
+```
+
+**3. Create an HTML form (`index.html`)**
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Image Upload</title>
+</head>
+<body>
+  <h1>Upload Image</h1>
+  <form action="/upload" method="POST" enctype="multipart/form-data">
+    <input type="file" name="image" accept="image/*">
+    <button type="submit">Upload</button>
+  </form>
+</body>
+</html>
+```
+
+**Explanation:**
+
+*   **Multer:**
+    *   The `multer` library handles incoming file uploads.
+    *   `storage` option configures where to save the uploaded files.
+    *   `upload.single('image')` specifies that the middleware expects a single file field named "image".
+*   **Route Handler:**
+    *   The `POST /upload` route handles the file upload.
+    *   `req.file` contains information about the uploaded file (e.g., filename, path).
+    *   Basic error handling checks if a file was actually uploaded.
+
+**To run:**
+
+1.  Save the code in the appropriate files.
+2.  Run `node server.js` in your terminal.
+3.  Open `index.html` in a browser and upload an image.
+
+**Key Improvements:**
+
+*   **Error Handling:** Implement more robust error handling (e.g., file size limits, file type validation).
+*   **File Storage:** Consider using cloud storage (AWS S3, Google Cloud Storage) for better scalability and reliability.
+*   **Security:** Validate file types and sizes to prevent security vulnerabilities.
+*   **User Interface:** Create a more user-friendly interface for uploading images.
+
+This example provides a basic foundation for image upload in Express.js. You can further enhance it based on your specific project requirements.
