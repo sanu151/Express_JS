@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Page</title>
+</head>
+
+<body>
+    <h1>Image Upload with Express.js and Multer</h1>
+
+    <button><a href="/register">Upload Image Page</a></button>
+
+    <h2>1. Project Setup</h2>
+    <ul>
+        <li>Create a new project directory: <code>mkdir my-image-upload && cd my-image-upload</code></li>
+        <li>Initialize npm: <code>npm init -y</code></li>
+        <li>Install necessary packages:
+            <pre><code>npm install express multer</code></pre>
+        </li>
+    </ul>
+
+    <h2>2. Create `server.js`</h2>
+    <pre><code>
+    const express = require('express');
+    const multer = require('multer');
+    const path = require('path'); 
+    const app = express();
+    
+    // Configure Multer storage
+    const storage = multer.diskStorage({
+      destination: (req, file, cb) => {
+        cb(null, 'uploads/'); // Specify the directory to save uploaded files
+      },
+      filename: (req, file, cb) => {
+        cb(null, `${Date.now()}-${file.originalname}`); // Generate unique filenames
+      }
+    });
+    
+    const upload = multer({ storage: storage });
+    
+    app.post('/upload', upload.single('image'), (req, res) => { 
+      if (!req.file) {
+        return res.status(400).send('No file uploaded.');
+      }
+    
+      res.send('File uploaded successfully!');
+    });
+    
+    app.listen(3000, () => {
+      console.log('Server listening on port 3000');
+    });
+      </code></pre>
+
+    <!-- const htmlCode = `
+    <h2>3. Create `index.html`</h2>
+
+        <!DOCTYPE html>
+        <html>
+        <head>
+        <title>Image Upload</title>
+        </head>
+        <body>
+        <h1>Upload Image</h1>
+        <form action="/upload" method="POST" enctype="multipart/form-data">
+            <input type="file" name="image" accept="image/*"> 
+            <button type="submit">Upload</button>
+        </form>
+        </body>
+        </html>
+    ` -->
+
+
+    <h2>Explanation</h2>
+    <ul>
+        <li>
+            <b>Multer:</b>
+            <ul>
+                <li>`multer` is a middleware that handles multipart/form-data, which is the format used for file
+                    uploads.</li>
+                <li>`storage` option configures where to save the uploaded files. In this example, it's set to the
+                    `uploads/`
+                    directory. You might need to create this directory beforehand.</li>
+                <li>`upload.single('image')` specifies that the middleware expects a single file field named "image".
+                </li>
+            </ul>
+
+        </li>
+
+        <li>
+            <b>Route Handler:</b>
+            <ul>
+                <li>The `POST /upload` route handles the file upload request.</li>
+                <li>`req.file` contains information about the uploaded file (e.g., filename, path).</li>
+                <li>The code checks if a file was actually uploaded. If not, it sends a 400 Bad Request response.</li>
+                <li>If a file is uploaded, it sends a success message.</li>
+            </ul>
+        </li>
+    </ul>
+
+
+    <h2>To Run</h2>
+    <ol>
+        <li>Save the code in the appropriate files.</li>
+        <li>Run <code>node server.js</code> in your terminal.</li>
+        <li>Open `index.html` in a browser.</li>
+        <li>Select an image and click the "Upload" button.</li>
+    </ol>
+
+    <h2>Key Improvements</h2>
+    <ul>
+        <li><strong>Error Handling:</strong> Implement more robust error handling (e.g., file size limits, file type
+            validation).</li>
+        <li><strong>File Storage:</strong> Consider using cloud storage (AWS S3, Google Cloud Storage) for better
+            scalability and reliability.</li>
+        <li><strong>Security:</strong> Validate file types and sizes to prevent security vulnerabilities.</li>
+        <li><strong>User Interface:</strong> Create a more user-friendly interface for uploading images, such as a
+            progress
+            bar or drag-and-drop functionality.</li>
+    </ul>
+
+    <p>This tutorial provides a basic foundation for image uploads in Express.js using Multer. You can adapt and extend
+        it
+        based on your specific project requirements.</p>
+</body>
+
+</html>
