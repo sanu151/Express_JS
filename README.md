@@ -1469,3 +1469,170 @@ app.listen(3000, () => {
 *   **User Interface:** Create a more user-friendly interface for uploading images.
 
 This example provides a basic foundation for image upload in Express.js. You can further enhance it based on your specific project requirements.
+
+
+## Upload images in Express.js using Multer and save the image paths to a MongoDB database, following an MVC-like structure:
+
+**1. Project Setup**
+
+*   Create a new project directory: `mkdir image-upload-mvc && cd image-upload-mvc`
+*   Initialize npm: `npm init -y`
+*   Install necessary packages:
+
+```bash
+npm install express multer mongoose
+```
+
+**2. Project Structure**
+
+```
+image-upload-mvc/
+├── app.js
+├── models/
+│   └── Image.js
+├── controllers/
+│   └── imageController.js
+├── routes/
+│   └── imageRoutes.js
+├── uploads/ 
+├── package.json
+├── .env 
+```
+
+**3. Create `app.js`**
+
+```javascript
+const express = require('express');
+const mongoose = require('mongoose');
+const dotenv = require('dotenv');
+const imageRoutes = require('./routes/imageRoutes');
+
+dotenv.config();
+
+const app = express();
+const port = process.env.PORT || 3000;
+
+// Connect to MongoDB
+mongoose.connect(process.env.MONGODB_URI, { 
+  useNewUrlParser: true, 
+  useUnifiedTopology: true 
+})
+.then(() => console.log('Connected to MongoDB'))
+.catch(err => console.error('MongoDB connection error:', err));
+
+// Middleware
+app.use(express.json()); 
+
+app.use('/api/images', imageRoutes); 
+
+app.listen(port, () => {
+  console.log(`Server listening on port ${port}`);
+});
+```
+
+**4. Create `Image.js` (models/Image.js)**
+
+```javascript
+const mongoose = require('mongoose');
+
+const imageSchema = new mongoose.Schema({
+  name: String,
+  path: String,
+});
+
+const Image = mongoose.model('Image', imageSchema);
+
+module.exports = Image;
+```
+
+**5. Create `imageController.js` (controllers/imageController.js)**
+
+```javascript
+const multer = require('multer');
+const path = require('path');
+const Image = require('../models/Image');
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'uploads/'); 
+  },
+  filename: (req, file, cb) => {
+    cb(null, `${Date.now()}-${file.originalname}`);
+  }
+});
+
+const upload = multer({ storage: storage });
+
+const uploadImage = async (req, res) => {
+  try {
+    const { file } = req;
+
+    if (!file) {
+      return res.status(400).json({ message: 'No file uploaded.' });
+    }
+
+    const newImage = new Image({
+      name: file.originalname,
+      path: `/uploads/${file.filename}` 
+    });
+
+    await newImage.save();
+
+    res.status(201).json({ message: 'Image uploaded successfully!', image: newImage }); 
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error uploading image.' });
+  }
+};
+
+module.exports = {
+  uploadImage,
+};
+```
+
+**6. Create `imageRoutes.js` (routes/imageRoutes.js)**
+
+```javascript
+const express = require('express');
+const router = express.Router();
+const imageController = require('../controllers/imageController');
+
+router.post('/', imageController.uploadImage);
+
+module.exports = router;
+```
+
+**7. Create `.env` file**
+
+```
+MONGODB_URI=mongodb://localhost:27017/your_database_name 
+PORT=3000 
+```
+
+**8. Run the Server**
+
+*   Start the MongoDB server.
+*   Run `nodemon app.js` (install nodemon: `npm install -g nodemon`)
+
+**Explanation:**
+
+*   **MVC Structure:**
+    *   The `models` folder contains the `Image` model, representing the data structure for images.
+    *   The `controllers` folder contains the `imageController`, handling the image upload logic and interacting with the model.
+    *   The `routes` folder defines the API routes, including the `POST /api/images` route for uploading images.
+
+*   **Multer:**
+    *   `multer` handles file uploads, storing images in the `uploads/` directory.
+*   **MongoDB:**
+    *   The `mongoose` library connects to the MongoDB database.
+    *   The `Image` model is used to store image information (name and path) in the database.
+
+*   **Error Handling:** Basic error handling is implemented to catch potential issues during the upload process.
+
+This example provides a basic implementation of image upload with Multer and MongoDB in an MVC-like structure. You can further enhance it by:
+
+*   Implementing more robust error handling and input validation.
+*   Adding features like image resizing, compression, and security measures.
+*   Improving the user interface and user experience.
+
+Remember to adjust the MongoDB connection string and other configurations according to your specific setup.
