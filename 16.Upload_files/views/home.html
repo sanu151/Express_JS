@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Upload files</title>
+</head>
+
+<body>
+  <h1>Image Upload with Express.js, Multer, and MongoDB (MVC)</h1>
+
+  <h2>1. Project Setup</h2>
+  <ul>
+    <li>Create a new project directory: <code>mkdir image-upload-mvc && cd image-upload-mvc</code></li>
+    <li>Initialize npm: <code>npm init -y</code></li>
+    <li>Install necessary packages:
+      <pre><code>npm install express multer mongoose</code></pre>
+    </li>
+  </ul>
+
+  <h2>2. Project Structure</h2>
+  <p>
+    <code><pre>
+    image-upload-mvc/
+    ├── app.js
+    ├── models/
+    │   └── Image.js
+    ├── controllers/
+    │   └── imageController.js
+    ├── routes/
+    │   └── imageRoutes.js
+    ├── uploads/ 
+    ├── package.json
+    ├── .env 
+        </pre></code>
+  </p>
+
+  <h2>3. Create `app.js`</h2>
+  <pre><code>
+    const express = require('express');
+    const mongoose = require('mongoose');
+    const dotenv = require('dotenv');
+    const imageRoutes = require('./routes/imageRoutes');
+    
+    dotenv.config();
+    
+    const app = express();
+    const port = process.env.PORT || 3000;
+    
+    // Connect to MongoDB
+    mongoose.connect(process.env.MONGODB_URI, { 
+      useNewUrlParser: true, 
+      useUnifiedTopology: true 
+    })
+    .then(() => console.log('Connected to MongoDB'))
+    .catch(err => console.error('MongoDB connection error:', err));
+    
+    // Middleware
+    app.use(express.json()); 
+    
+    app.use('/api/images', imageRoutes); 
+    
+    app.listen(port, () => {
+      console.log(`Server listening on port ${port}`);
+    });
+      </code></pre>
+
+  <h2>4. Create `Image.js` (models/Image.js)</h2>
+  <pre><code>
+    const mongoose = require('mongoose');
+    
+    const imageSchema = new mongoose.Schema({
+      name: String,
+      path: String,
+    });
+    
+    const Image = mongoose.model('Image', imageSchema);
+    
+    module.exports = Image;
+      </code></pre>
+
+  <h2>5. Create `imageController.js` (controllers/imageController.js)</h2>
+  <pre><code>
+    const multer = require('multer');
+    const path = require('path');
+    const Image = require('../models/Image');
+    
+    const storage = multer.diskStorage({
+      destination: (req, file, cb) => {
+        cb(null, 'uploads/'); 
+      },
+      filename: (req, file, cb) => {
+        cb(null, `${Date.now()}-${file.originalname}`);
+      }
+    });
+    
+    const upload = multer({ storage: storage });
+    
+    const uploadImage = async (req, res) => {
+      try {
+        const { file } = req;
+    
+        if (!file) {
+          return res.status(400).json({ message: 'No file uploaded.' });
+        }
+    
+        const newImage = new Image({
+          name: file.originalname,
+          path: `/uploads/${file.filename}` 
+        });
+    
+        await newImage.save();
+    
+        res.status(201).json({ message: 'Image uploaded successfully!', image: newImage }); 
+      } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error uploading image.' });
+      }
+    };
+    
+    module.exports = {
+      uploadImage,
+    };
+      </code></pre>
+
+  <h2>6. Create `imageRoutes.js` (routes/imageRoutes.js)</h2>
+  <pre><code>
+    const express = require('express');
+    const router = express.Router();
+    const imageController = require('../controllers/imageController');
+    
+    router.post('/', imageController.uploadImage);
+    
+    module.exports = router;
+      </code></pre>
+
+  <h2>7. Create `.env` file</h2>
+  <pre><code>
+    MONGODB_URI=mongodb://localhost:27017/your_database_name 
+    PORT=3000 
+      </code></pre>
+
+  <h2>Explanation</h2>
+  <p>
+    This tutorial demonstrates how to upload images in Express.js using Multer and save the image paths to a MongoDB
+    database, following an MVC-like structure.
+  </p>
+
+  <ul>
+    <li><b>MVC Structure:</b></li>
+    <ul>
+      <li>The `models` folder contains the `Image` model, representing the data structure for images.</li>
+      <li>The `controllers` folder contains the `imageController`, handling the image upload logic and interacting
+        with the
+        model.</li>
+      <li>The `routes` folder defines the API routes, including the `POST /api/images` route for uploading images.
+      </li>
+    </ul>
+  </ul>
+
+  <ul>
+    <li><b>Multer:</b></li>
+    <ul>
+      <li>`multer` handles file uploads, storing images in the `uploads/` directory.</li>
+    </ul>
+  </ul>
+
+  <ul>
+    <li><b>MongoDB:</b></li>
+    <ul>
+      <li>The `mongoose` library connects to the MongoDB database.</li>
+      <li>The `Image` model is used to store image information (name and path) in the database.</li>
+    </ul>
+  </ul>
+
+</body>
+
+</html>
