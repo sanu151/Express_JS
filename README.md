@@ -1905,3 +1905,86 @@ app.listen(3000, () => {
 3. **Error Handling**: Always handle validation errors gracefully to provide a good user experience.
 4. **Client-Side vs Server-Side Validation**: Server-side validation is essential even if client-side validation exists, as client-side validation can be bypassed.
 
+## Server-Side Data Validation with Joi in Express.js
+
+This tutorial will guide you through implementing server-side data validation in your Express.js applications using the **Joi** library.
+
+**1. Project Setup**
+
+*   Create a new project directory: `mkdir my-joi-app && cd my-joi-app`
+*   Initialize npm: `npm init -y`
+*   Install necessary packages:
+
+```bash
+npm install express joi
+```
+
+**2. Create `server.js`**
+
+```javascript
+const express = require('express');
+const Joi = require('joi');
+const app = express();
+
+app.use(express.json()); // Parse incoming JSON data
+
+const userSchema = Joi.object({
+  username: Joi.string().alphanum().min(3).max(30).required(),
+  email: Joi.string().email().required(),
+  age: Joi.number().integer().min(18).max(99).required()
+});
+
+app.post('/users', async (req, res) => {
+  try {
+    const { error } = userSchema.validate(req.body);
+
+    if (error) {
+      return res.status(400).json({ error: error.details[0].message }); 
+    }
+
+    // If no errors, proceed with your logic (e.g., create a user)
+    console.log('User data is valid:', req.body);
+    res.json({ message: 'User created successfully!' });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+app.listen(3000, () => {
+  console.log('Server listening on port 3000');
+});
+```
+
+**3. Explanation**
+
+*   **Import necessary modules:**
+    *   `express`: For creating the Express.js application.
+    *   `Joi`: For data validation.
+    *   `express.json()` middleware to parse incoming JSON request bodies.
+
+*   **Define the schema:**
+    *   `userSchema` uses the `Joi.object()` method to define the structure of the expected user data.
+    *   `Joi.string()`, `Joi.number()`, etc., define the expected data types.
+    *   Validation rules like `required`, `min`, `max`, `email`, `alphanum` are applied to ensure data integrity.
+
+*   **Handle the POST request:**
+    *   `userSchema.validate(req.body)` validates the incoming request body against the defined schema.
+    *   `error` will contain details about any validation errors.
+    *   If `error` exists, return a 400 Bad Request response with an error message.
+    *   If no errors, proceed with your application logic (e.g., create a user in the database).
+
+**Key Concepts**
+
+*   **Schema Definition:** Define clear and concise schemas to represent the expected structure and constraints of your data.
+*   **Data Validation:** Joi provides a rich set of validation rules to ensure data integrity and security.
+*   **Error Handling:** Return meaningful error messages to the client to guide them in correcting their input.
+
+**Benefits of using Joi:**
+
+*   **Improved Data Quality:** Ensures that only valid data is processed by your application.
+*   **Enhanced Security:** Helps prevent vulnerabilities like injection attacks by validating and sanitizing user input.
+*   **Better User Experience:** Provides informative error messages to guide users.
+*   **Increased Code Maintainability:** Makes your validation logic more reusable and easier to update.
+
